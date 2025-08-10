@@ -472,8 +472,12 @@ package() {
   if [ "$_NOCOMPILE" != "true" ]; then
     _package_makepkg
   fi
-  strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe,cpl}
-  strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe,cpl}
+  if [[ -d "$pkgdir/usr/lib/wine/i386-windows" && "$pkgdir" == /* && -n "$pkgdir" ]]; then 
+     strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe,cpl}
+  fi
+  if [[ -d "$pkgdir/usr/lib/wine/x86_64-windows" && "$pkgdir" == /* && -n "$pkgdir" ]]; then
+     strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe,cpl}
+  fi
   strip --strip-unneeded "$pkgdir"/usr/bin/*
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
