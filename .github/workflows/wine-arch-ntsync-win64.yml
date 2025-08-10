@@ -1,0 +1,47 @@
+name: Arch Linux WINE-TKG NTSYNC WIN64 CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+          pacman -Syu --noconfirm base-devel sudo git vulkan-headers
+
+      - name: Create User
+        run: |
+          useradd -m -G wheel -s /bin/bash user
+          echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+      - name: Compile
+        env:
+          XDG_CACHE_HOME: /tmp/.cache
+        run: |
+          chown -R user:user $PWD
+          sudo -u user bash -c "
+            cd wine-tkg-git
+            echo $PWD
+            sed -i 's/wayland_driver="false"/wayland_driver="true"/' customization.cfg
+            sed -i 's/_use_ntsync=\"false\"/_use_ntsync=\"true\"/' customization.cfg
+            sed -i 's/_use_esync=\"true\"/_use_esync=\"false\"/' customization.cfg
+            sed -i 's/_use_fsync=\"true\"/_use_fsync=\"false\"/' customization.cfg
+            sed -i 's/_win10_default=\"false\"/_win10_default=\"true\"/' customization.cfg
+            sed -i 's/_msvcrt_nativebuiltin=\"false\"/_msvcrt_nativebuiltin=\"true\"/' customization.cfg
+            sed -i 's/_NOLIB32=\"false\"/_NOLIB32=\"true\"/' wine-tkg-profiles/advanced-customization.cfg
+            yes|PKGDEST=/tmp/wine-tkg makepkg --noconfirm -s
+          "
+
+      - name: Archive the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wine-tkg-build
+          path: /tmp/wine-tkg
