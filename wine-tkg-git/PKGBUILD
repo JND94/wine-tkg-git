@@ -472,6 +472,11 @@ package() {
   if [ "$_NOCOMPILE" != "true" ]; then
     _package_makepkg
   fi
+  strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe}
+  strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
+  find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
+  find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
+  rm -rf "$pkgdir/usr/include"
 }
 
 trap exit_cleanup EXIT
