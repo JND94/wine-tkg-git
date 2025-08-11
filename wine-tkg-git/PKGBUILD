@@ -478,7 +478,14 @@ package() {
   if [[ -d "$pkgdir/usr/lib/wine/x86_64-windows" && "$pkgdir" == /* && -n "$pkgdir" ]]; then
      strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe,cpl}
   fi
-  strip --strip-unneeded "$pkgdir"/usr/bin/*
+  strip --strip-unneeded "$pkgdir"/usr/bin/wine
+  strip --strip-unneeded "$pkgdir"/usr/bin/wineserver
+  strip --strip-unneeded "$pkgdir"/usr/bin/widl
+  strip --strip-unneeded "$pkgdir"/usr/bin/wmc
+  strip --strip-unneeded "$pkgdir"/usr/bin/winegcc
+  strip --strip-unneeded "$pkgdir"/usr/bin/winebuild
+  strip --strip-unneeded "$pkgdir"/usr/bin/winedump
+  strip --strip-unneeded "$pkgdir"/usr/bin/wrc
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
   rm -rf "$pkgdir/usr/include"
