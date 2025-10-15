@@ -30,10 +30,6 @@ jobs:
           sudo -u user bash -c "
             cd wine-tkg-git
             echo $PWD
-            sed -i 's/wayland_driver="false"/wayland_driver="true"/' customization.cfg
-            sed -i 's/_use_ntsync=\"false\"/_use_ntsync=\"true\"/' customization.cfg
-            sed -i 's/_use_esync=\"true\"/_use_esync=\"false\"/' customization.cfg
-            sed -i 's/_use_fsync=\"true\"/_use_fsync=\"false\"/' customization.cfg
             sed -i 's/_win10_default=\"false\"/_win10_default=\"true\"/' customization.cfg
             sed -i 's/_msvcrt_nativebuiltin=\"false\"/_msvcrt_nativebuiltin=\"true\"/' customization.cfg
             sed -i 's/_NOLIB32=\"false\"/_NOLIB32=\"wow64\"/' wine-tkg-profiles/advanced-customization.cfg
